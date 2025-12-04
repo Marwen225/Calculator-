@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculatrice d'Expressions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .examples {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .examples h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .example-btn {
+            padding: 0.5rem 1rem;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .results {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-section h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .result-content {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #333;
+            border-left: 4px solid #667eea;
+        }
+
+        .final-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .error {
+            background: #fee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Calculatrice d'Expressions</h1>
+        <p class="subtitle">Testez votre calculatrice C avec simplification algébrique</p>
+
+        <div class="examples">
+            <h3>Exemples rapides :</h3>
+            <div class="example-buttons">
+                <button class="example-btn" onclick="setExample('(x + 0) * (5 - 3)')">
+                    (x + 0) * (5 - 3)
+                </button>
+                <button class="example-btn" onclick="setExample('x * 1 + 0')">
+                    x * 1 + 0
+                </button>
+                <button class="example-btn" onclick="setExample('(3 + 4) * (2 + 1)')">
+                    (3 + 4) * (2 + 1)
+                </button>
+                <button class="example-btn" onclick="setExample('x * 0 + 5')">
+                    x * 0 + 5
+                </button>
+                <button class="example-btn" onclick="setExample('(x + 2) * (x - 2)')">
+                    (x + 2) * (x - 2)
+                </button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="expression">Expression infixe :</label>
+            <input type="text" id="expression" placeholder="Ex: (x + 0) * (5 - 3)" value="(x + 0) * (5 - 3)">
+        </div>
+
+        <div class="input-group">
+            <label for="varValue">Valeur de x :</label>
+            <input type="number" id="varValue" placeholder="10" value="10" step="0.1">
+        </div>
+
+        <div class="button-group">
+            <button onclick="calculate()">Calculer</button>
+            <button onclick="clearAll()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                Effacer
+            </button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="result-section">
+                <h3>Expression postfixe :</h3>
+                <div class="result-content" id="postfix"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>Arbre original :</h3>
+                <div class="result-content" id="originalTree"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>Arbre simplifié :</h3>
+                <div class="result-content" id="simplifiedTree"></div>
+            </div>
+
+            <div class="result-section">
+                <h3>Résultat final :</h3>
+                <div class="final-result" id="finalResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function setExample(expr) {
+            document.getElementById('expression').value = expr;
+        }
+
+        function clearAll() {
+            document.getElementById('expression').value = '';
+            document.getElementById('varValue').value = '10';
+            document.getElementById('results').classList.remove('show');
+        }
+
+        async function calculate() {
+            const expression = document.getElementById('expression').value;
+            const varValue = parseFloat(document.getElementById('varValue').value) || 0;
+
+            if (!expression.trim()) {
+                alert('Veuillez entrer une expression !');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5001/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        expression: expression,
+                        xValue: varValue
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert('Erreur: ' + (error.error || 'Calcul échoué'));
+                    return;
+                }
+
+                const results = await response.json();
+
+                document.getElementById('postfix').textContent = results.postfix || 'N/A';
+                document.getElementById('originalTree').textContent = results.originalTree || 'N/A';
+                document.getElementById('simplifiedTree').textContent = results.simplifiedTree || 'N/A';
+                document.getElementById('finalResult').textContent = results.result || 'N/A';
+
+                document.getElementById('results').classList.add('show');
+            } catch (error) {
+                alert('Erreur de connexion au serveur. Assurez-vous que server.py est en cours d\'exécution.\n\nPour démarrer le serveur:\n1. Installez Flask: pip3 install flask flask-cors\n2. Lancez: python3 server.py');
+                console.error('Error:', error);
+            }
+        }
+
+        // Calculer automatiquement au chargement
+        window.onload = () => calculate();
+    </script>
+</body>
+
+</html>
