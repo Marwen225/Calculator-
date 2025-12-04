@@ -1,17 +1,13 @@
-/*
- * Calculator - Single File Version
- * Calculateur d'expressions mathématiques avec arbre d'expression
- * Compile avec: gcc calculator_single_file.c -o calculator_single
- */
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-// ============================================
+//
 // STRUCTURES ET TYPES
-// ============================================
+// 
 
 typedef enum {
     OPERATOR,
@@ -42,9 +38,9 @@ typedef struct CharStack {
     char* array;
 } CharStack;
 
-// ============================================
+// 
 // UTILITAIRES
-// ============================================
+// 
 
 int isOperator(char c) {
     return (c == '+' || c == '-' || c == '*' || c == '/');
@@ -64,9 +60,9 @@ int isOperand(char c) {
     return isalnum(c);
 }
 
-// ============================================
+// 
 // GESTION DES PILES (Stack)
-// ============================================
+// 
 
 Stack* createStack(int capacity) {
     Stack* stack = (Stack*)malloc(sizeof(Stack));
@@ -106,9 +102,9 @@ TreeNode* peek(Stack* stack) {
     return stack->array[stack->top];
 }
 
-// ============================================
+// 
 // GESTION DES PILES DE CARACTÈRES (CharStack)
-// ============================================
+// 
 
 CharStack* createCharStack(int capacity) {
     CharStack* stack = (CharStack*)malloc(sizeof(CharStack));
@@ -155,9 +151,9 @@ void freeCharStack(CharStack* stack) {
     }
 }
 
-// ============================================
+// 
 // CONVERSION INFIX -> POSTFIX
-// ============================================
+//
 
 char* infixToPostfix(const char* infix) {
     int len = strlen(infix);
@@ -277,9 +273,9 @@ TreeNode* buildExpressionTree(char* postfix) {
     return root;
 }
 
-// ============================================
+// 
 // SIMPLIFICATION DE L'ARBRE
-// ============================================
+// 
 
 static void freeTreeInternal(TreeNode* node) {
     if (!node) return;
@@ -379,9 +375,9 @@ void simplifyTree(TreeNode** nodeRef) {
     }
 }
 
-// ============================================
+// 
 // ÉVALUATION DE L'ARBRE
-// ============================================
+// 
 
 double evaluateTree(TreeNode* root, char varName, double varValue) {
     if (!root) return 0.0;
@@ -422,9 +418,9 @@ double evaluateTree(TreeNode* root, char varName, double varValue) {
     return 0.0;
 }
 
-// ============================================
+// 
 // AFFICHAGE ET LIBÉRATION DE MÉMOIRE
-// ============================================
+// 
 
 void printInorder(TreeNode* node) {
     if (!node) return;
@@ -449,9 +445,9 @@ void freeTree(TreeNode* node) {
     free(node);
 }
 
-// ============================================
+// 
 // FONCTION PRINCIPALE
-// ============================================
+//
 
 int main(int argc, char *argv[]) {
     // Valeurs par défaut
