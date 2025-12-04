@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Path to the calculator executable
-CALCULATOR_PATH = './calculator'
+CALCULATOR_PATH = './calculator_single'
 
 @app.route('/')
 def home():
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # Check if calculator exists
     if not os.path.exists(CALCULATOR_PATH):
         print(f"Error: Calculator not found at {CALCULATOR_PATH}")
-        print("Please compile it first: gcc main.c converter.c tree_builder.c simplifier.c evaluator.c stack.c utils.c -o calculator")
+        print("Please compile it first: gcc calculator_single_file.c -o calculator_single")
         exit(1)
     
     print("Starting calculator server on http://localhost:5001")
